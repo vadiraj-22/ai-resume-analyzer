@@ -5,17 +5,14 @@ import ScoreBadge from '../ScoreBadge'
 const Category = ({title,score}:{title:string,score:number})=>{
   const textColor = score >70 ? 'text-green-600': score >49 ? 'text-yellow-600' : 'text-red-600'
   return (
-    <div className='Resume-Summary'>
-      <div className='category'>
-        <div className=' flex flex-row  gap-2 items-center justify-center'>
-          <p className='text-2xl '>{title}</p>
-          <ScoreBadge score={score}/>
-        </div>
-
-          <p className='text-2xl'>
-            <span className={textColor}>{score}</span>
-          </p>
+    <div className='category'>
+      <div className='flex flex-row gap-2 items-center justify-center'>
+        <p className='text-2xl'>{title}</p>
+        <ScoreBadge score={score}/>
       </div>
+      <p className='text-2xl'>
+        <span className={textColor}>{score}</span>
+      </p>
     </div>
   )
 }
@@ -31,10 +28,12 @@ const Summary = ({feedback }:{feedback :Feedback}) => {
         </div>
       </div>
 
-      <Category title='Tone and Style' score={feedback.toneAndStyle.score}/> 
-      <Category title='Content' score={feedback.content.score}/> 
-      <Category title='Structure' score={feedback.structure.score}/> 
-      <Category title='skills' score={feedback.skills.score}/> 
+      <div className='resume-summary flex-col'>
+        <Category title='Tone and Style' score={feedback.toneAndStyle.score}/> 
+        <Category title='Content' score={feedback.content.score}/> 
+        <Category title='Structure' score={feedback.structure.score}/> 
+        <Category title='Skills' score={feedback.skills.score}/> 
+      </div>
 
     </div>
   )
