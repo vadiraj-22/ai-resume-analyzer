@@ -5,7 +5,7 @@ declare global {
     puter: {
       auth: {
         getUser: () => Promise<PuterUser>;
-        isSignedIn: () => Promise<boolean>;
+        isSignedIn: () => boolean;
         signIn: () => Promise<void>;
         signOut: () => Promise<void>;
       };
@@ -126,7 +126,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
     set({ isLoading: true, error: null });
 
     try {
-      const isSignedIn = await puter.auth.isSignedIn();
+      const isSignedIn = puter.auth.isSignedIn();
       if (isSignedIn) {
         const user = await puter.auth.getUser();
         set({
@@ -352,7 +352,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
       ],
       undefined,
       undefined,
-      { model: "claude-sonnet-4" }
+      { model: "claude-opus-4-6" }
     ) as Promise<AIResponse | undefined>;
   };
 

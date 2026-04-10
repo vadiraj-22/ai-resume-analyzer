@@ -12,6 +12,7 @@ interface Resume {
   imagePath: string;
   resumePath: string;
   feedback: Feedback;
+  createdAt?: string;
 }
 
 interface Feedback {

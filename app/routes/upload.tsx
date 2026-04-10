@@ -64,6 +64,7 @@ const Upload = () => {
                 imagePath:uploadedImage.path,
                 companyName,jobTitle,jobDescription,
                 feedback:'',
+                createdAt: new Date().toISOString(),
             }
             await kv.set(`resume:${uuid}`,JSON.stringify(data));
 
@@ -91,10 +92,11 @@ const Upload = () => {
                     return;
                 }
 
-                // Validate JSON before parsing
+                // Validate JSON before parsing (strip markdown code fences if present)
                 let parsedFeedback;
                 try {
-                    parsedFeedback = JSON.parse(feedbackText);
+                    const cleanedText = feedbackText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+                    parsedFeedback = JSON.parse(cleanedText);
                 } catch (jsonError) {
                     console.error('JSON parsing error:', jsonError);
                     console.error('Raw AI response:', feedbackText);

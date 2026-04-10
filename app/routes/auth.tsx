@@ -12,7 +12,7 @@ const auth = () => {
   const { isLoading , auth} = usePuterStore();
  
   const location = useLocation();
-  const next = location.search.split('next=')[1];
+  const next = new URLSearchParams(location.search).get('next') || '/';
   const navigate = useNavigate();
 
   useEffect(()=>{

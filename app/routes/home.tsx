@@ -25,21 +25,39 @@ const [resumes, setResumes] = useState<Resume[]>([])
   },[auth.isAuthenticated])
 
   useEffect(()=>{
+    if(!auth.isAuthenticated) return;
+
     const loadResume = async()=>{
       setLoadingResume(true)
 
       const resumes = (await kv.list('resume:*',true)) as KVItem[];
+      console.log('raw KV entries:', resumes);
 
-      const parsedResumes = resumes?.map((resume)=>{
-        return JSON.parse(resume.value) as Resume
-      })
+      const parsedResumes = (resumes || []).reduce<Resume[]>((acc, item) => {
+        try {
+          const parsed = JSON.parse(item.value);
+          // only include entries that have completed feedback
+          if (parsed && parsed.id && parsed.feedback && typeof parsed.feedback === 'object') {
+            acc.push(parsed as Resume);
+          }
+        } catch (e) {
+          console.warn('Failed to parse resume entry:', item.key, e);
+        }
+        return acc;
+      }, []);
 
-      console.log('parsed Resumes ' ,parsedResumes);
-      setResumes(parsedResumes || []);
+      const sorted = parsedResumes.sort((a, b) => {
+        const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bTime - aTime;
+      });
+
+      console.log('loaded resumes:', sorted.length);
+      setResumes(sorted);
       setLoadingResume(false);
     }
     loadResume();
-  },[])
+  },[auth.isAuthenticated])
 
   
   return <main className="bg-[url('/images/bg-main.svg')] bg-cover ">
